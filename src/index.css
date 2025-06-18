@@ -1,0 +1,206 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body, #root {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Root CSS variables */
+:root {
+    --editor-font-family: 'Courier New';
+}
+
+/* Dark Theme (Default) */
+.dark {
+    --editor-bg: #1e1e1e;
+    --editor-sidebar: #252526;
+    --editor-toolbar: #2d2d30;
+    --editor-text: #cccccc;
+    --editor-accent: #007acc;
+    --border-color: #404040;
+}
+
+/* Light Theme */
+.light {
+    --editor-bg: #ffffff;
+    --editor-sidebar: #f3f3f3;
+    --editor-toolbar: #f8f8f8;
+    --editor-text: #333333;
+    --editor-accent: #0066cc;
+    --border-color: #e0e0e0;
+}
+
+/* Apply theme variables */
+.bg-editor-bg {
+    background-color: var(--editor-bg);
+}
+
+.bg-editor-sidebar {
+    background-color: var(--editor-sidebar);
+}
+
+.bg-editor-toolbar {
+    background-color: var(--editor-toolbar);
+}
+
+.text-editor-text {
+    color: var(--editor-text);
+}
+
+.text-editor-accent {
+    color: var(--editor-accent);
+}
+
+.border-editor {
+    border-color: var(--border-color);
+}
+
+/* Custom scrollbars - Dark theme */
+.dark ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #2d2d30;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #424245;
+    border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #4c4c4f;
+}
+
+/* Custom scrollbars - Light theme */
+.light ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.light ::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.light ::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
+/* Monaco Editor adjustments - Dark theme */
+.dark .monaco-editor {
+    background-color: #1e1e1e !important;
+}
+
+.dark .monaco-editor .margin {
+    background-color: #1e1e1e !important;
+}
+
+.dark .monaco-editor .monaco-editor-background {
+    background-color: #1e1e1e !important;
+}
+
+/* Monaco Editor adjustments - Light theme */
+.light .monaco-editor {
+    background-color: #ffffff !important;
+}
+
+.light .monaco-editor .margin {
+    background-color: #ffffff !important;
+}
+
+.light .monaco-editor .monaco-editor-background {
+    background-color: #ffffff !important;
+}
+
+/* Monaco Editor font override */
+.monaco-editor .view-lines {
+    font-family: var(--editor-font-family, 'Courier New') !important;
+}
+
+.monaco-editor .view-line {
+    font-family: var(--editor-font-family, 'Courier New') !important;
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.layout-transition {
+    transition: all 0.3s ease-in-out;
+}
+
+.drag-region {
+    -webkit-app-region: drag;
+}
+
+.no-drag {
+    -webkit-app-region: no-drag;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Update existing border classes to use theme variables */
+.border-gray-700 {
+    border-color: var(--border-color);
+}
+
+.hover\:bg-gray-700:hover {
+    background-color: var(--editor-sidebar);
+}
+
+.hover\:bg-gray-600:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Light theme specific hover states */
+.light .hover\:bg-gray-600:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.light .hover\:bg-gray-700:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
