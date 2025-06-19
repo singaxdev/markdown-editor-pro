@@ -81,6 +81,25 @@
 3. **Launch** Markdown Editor Pro from your applications menu
 4. **Start writing** immediately - no setup required!
 
+#### 🍎 **macOS Security Notice**
+**IMPORTANT**: macOS will block this app because it's not signed with an Apple Developer certificate. **The app is completely safe** - this is just Apple's security measure for free/open-source software.
+
+**🚨 If you see "damaged" or "cannot verify developer" errors:**
+
+**Quick Fix (30 seconds):**
+1. **Open Terminal** (⌘ + Space, type "Terminal")
+2. **Copy and paste this command:**
+   ```bash
+   xattr -d com.apple.quarantine ~/Downloads/Markdown*.dmg
+   ```
+3. **Press Enter** and try opening the .dmg again
+
+**Alternative Methods:**
+- **Right-click** the .dmg → **"Open"** → **"Open"** (bypass Gatekeeper)
+- **System Settings** → **Privacy & Security** → **"Open Anyway"**
+
+**Why this happens:** Apple charges $99/year for code signing certificates. Since this is free open-source software, we don't pay for Apple's "blessing" - but the app is just as safe!
+
 ## 🎯 Getting Started
 
 1. **Create a New Document**: Click the "+" tab or use Ctrl+N (Cmd+N on Mac)

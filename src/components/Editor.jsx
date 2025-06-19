@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Editor as MonacoEditor } from '@monaco-editor/react';
 
 const Editor = ({
@@ -21,9 +21,25 @@ const Editor = ({
   const bracketPairs = settings.bracketPairs !== false;
   const folding = settings.folding !== false;
   const editorRef = useRef(null);
+  const [monacoFailed, setMonacoFailed] = useState(false);
+  const [isMonacoLoading, setIsMonacoLoading] = useState(true);
+  
   const handleEditorChange = (value) => {
     onChange(value || '');
   };
+
+  // Add timeout to detect Monaco loading issues
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isMonacoLoading) {
+        console.warn('Monaco Editor taking too long to load, switching to fallback');
+        setMonacoFailed(true);
+        setIsMonacoLoading(false);
+      }
+    }, 10000); // 10 second timeout
+
+    return () => clearTimeout(timeout);
+  }, [isMonacoLoading]);
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
@@ -192,6 +208,35 @@ const Editor = ({
   // Apply drag and drop handlers if image manager is available
   const dragHandlers = imageManager ? imageManager.getDragHandlers(onImageInsert, currentFile) : {};
 
+  // Fallback simple textarea if Monaco fails to load
+  const TextareaFallback = () => (
+    <textarea
+      value={content}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full h-full p-4 bg-editor-bg text-editor-text border-none outline-none resize-none font-mono text-sm leading-relaxed"
+      style={{
+        fontSize: `${fontSize}px`,
+        fontFamily: `${fontFamily}, Monaco, Cascadia Code, Consolas, Courier New, monospace`,
+        fontWeight: fontWeight,
+        lineHeight: lineHeight,
+      }}
+      placeholder="Start writing your markdown here..."
+    />
+  );
+
+  if (monacoFailed) {
+    return (
+      <div className="flex-1 bg-editor-bg relative" {...dragHandlers}>
+        <div className="absolute top-2 left-2 z-10">
+          <div className="bg-yellow-600 text-white text-xs px-2 py-1 rounded">
+            Using fallback editor (Monaco failed to load)
+          </div>
+        </div>
+        <TextareaFallback />
+      </div>
+    );
+  }
+
   return (
     <div 
       className={`flex-1 bg-editor-bg ${
@@ -204,9 +249,22 @@ const Editor = ({
         defaultLanguage="markdown"
         value={content}
         onChange={handleEditorChange}
-        onMount={handleEditorMount}
+        onMount={(editor, monaco) => {
+          setIsMonacoLoading(false);
+          handleEditorMount(editor, monaco);
+        }}
         options={editorOptions}
         theme={isDarkMode ? 'dark-theme' : 'light-theme'}
+        loading={
+          <div className="flex items-center justify-center h-full">
+            <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-editor-accent"></div>
+          </div>
+        }
+        onError={(error) => {
+          console.error('Monaco Editor failed to load:', error);
+          setMonacoFailed(true);
+          setIsMonacoLoading(false);
+        }}
       />
       
       {/* Hidden file input for image selection */}

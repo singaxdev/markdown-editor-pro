@@ -29,6 +29,7 @@
     "dist:linux": "npm run build && electron-builder --linux",
     "dist:all": "npm run build && electron-builder --mac --win --linux",
     "release": "npm run build && electron-builder --publish=always",
+    "build:release": "node scripts/build-release.js",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
@@ -64,7 +65,7 @@
     "productName": "Markdown Editor Pro",
     "copyright": "Copyright © 2024 Your Company",
     "directories": {
-      "output": "release",
+      "output": "release/artifacts",
       "buildResources": "build"
     },
     "files": [
