@@ -140,7 +140,7 @@ Markdown Editor Pro is built with love and powered by these amazing open-source 
 
 **⭐ Love Markdown Editor Pro? Give us a star on GitHub!**
 
-[Download Now](https://github.com/singaxdev/markdown-editor-pro/releases/latest) • [View Documentation](https://github.com/singaxdev/markdown-editor-pro/wiki) • [Report Issues](https://github.com/singaxdev/markdown-editor-pro/issues)
+[Download Now](https://github.com/singaxdev/markdown-editor-pro/releases/latest) • [Report Issues](https://github.com/singaxdev/markdown-editor-pro/issues)
 
 **Copyright © 2025 Naveen Singaraju. All rights reserved.**
 
