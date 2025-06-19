@@ -52,7 +52,7 @@
 - ✅ **Professional Output**: Create documents that look polished and professional
 - ✅ **Reliable Performance**: Fast, stable, and optimized for long writing sessions
 - ✅ **Cross-Platform**: Works seamlessly on Windows, macOS, and Linux
-- ✅ **No Subscription**: One-time purchase with lifetime updates
+- ✅ **Free & Open Source**: Completely free to use with MIT License
 
 ## 📥 Download & Installation
 
@@ -60,9 +60,14 @@
 
 | Platform | Download | Size |
 |----------|----------|------|
-| **Windows** | [Download for Windows](https://github.com/singaxdev/markdown-editor-pro/releases/latest) | ~150MB |
-| **macOS** | [Download for macOS](https://github.com/singaxdev/markdown-editor-pro/releases/latest) | ~160MB |
-| **Linux** | [Download for Linux](https://github.com/singaxdev/markdown-editor-pro/releases/latest) | ~170MB |
+| **Windows (Installer)** | [Download Setup.exe](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-Setup-1.0.0.exe) | 183MB |
+| **Windows (Portable)** | [Download Portable.exe](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.exe) | 182MB |
+| **macOS (Intel)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.dmg) | 114MB |
+| **macOS (Apple Silicon)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0-arm64.dmg) | 110MB |
+| **Linux (AppImage)** | [Download .AppImage](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.AppImage) | 121MB |
+| **Linux (Debian)** | [Download .deb](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/markdown-editor-pro_1.0.0_amd64.deb) | 83MB |
+
+> 📋 **All Downloads**: [View All Release Assets](https://github.com/singaxdev/markdown-editor-pro/releases/latest)
 
 ### System Requirements
 
@@ -104,15 +109,15 @@ We're committed to providing excellent support and continuously improving Markdo
 
 ## 📋 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for complete details.
+This project is **free and open-source** software licensed under the **MIT License** - see the [LICENSE](LICENSE) file for complete details.
 
 ### License Summary
-- ✅ **Commercial Use**: Use in commercial projects
-- ✅ **Modification**: Modify the source code
-- ✅ **Distribution**: Distribute copies
-- ✅ **Private Use**: Use for personal projects
-- ❌ **Liability**: No warranty provided
-- ❌ **Trademark Use**: No trademark rights included
+- ✅ **Free to Use**: Completely free for personal and commercial use
+- ✅ **Modify & Customize**: Modify the source code as needed
+- ✅ **Distribute**: Share copies with others
+- ✅ **Commercial Use**: Use in commercial projects without restrictions
+- ✅ **Open Source**: Full source code available on GitHub
+- ❌ **Warranty**: Provided as-is without warranty
 
 ## 👨‍💻 Author
 
