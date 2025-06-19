@@ -57,6 +57,15 @@
 ## 📥 Download & Installation
 
 ### Latest Release (v1.0.0)
+
+| Platform | Filename | Size |
+|----------|----------|------|
+| **Windows (Installer)** | Markdown-Editor-Pro-Setup-1.0.0.exe | 183MB |
+| **macOS (Intel)** | Markdown-Editor-Pro-1.0.0.dmg | 114MB |
+| **macOS (Apple Silicon)** | Markdown-Editor-Pro-1.0.0-arm64.dmg | 110MB |
+| **Linux (AppImage)** | Markdown-Editor-Pro-1.0.0.AppImage | 121MB |
+| **Linux (Debian)** | markdown-editor-pro_1.0.0_amd64.deb | 83MB |
+
 > 📋 **All Downloads**: [View All Release Assets](https://github.com/singaxdev/markdown-editor-pro/releases/tag/v1.0.0)
 
 ### System Requirements
@@ -150,7 +159,7 @@ Markdown Editor Pro is built with love and powered by these amazing open-source 
 
 **⭐ Love Markdown Editor Pro? Give us a star on GitHub!**
 
-[Download Now](https://github.com/singaxdev/markdown-editor-pro/releases/latest) • [Report Issues](https://github.com/singaxdev/markdown-editor-pro/issues)
+[View Repository](https://github.com/singaxdev/markdown-editor-pro) • [Report Issues](https://github.com/singaxdev/markdown-editor-pro/issues)
 
 **Copyright © 2025 Naveen Singaraju. All rights reserved.**
 
