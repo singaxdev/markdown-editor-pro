@@ -60,13 +60,13 @@
 
 | Platform | Download | Size |
 |----------|----------|------|
-| **Windows (Installer)** | [Download Setup.exe](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-Setup-1.0.0.exe) | 183MB |
-| **macOS (Intel)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.dmg) | 114MB |
-| **macOS (Apple Silicon)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0-arm64.dmg) | 110MB |
-| **Linux (AppImage)** | [Download .AppImage](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.AppImage) | 121MB |
-| **Linux (Debian)** | [Download .deb](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/markdown-editor-pro_1.0.0_amd64.deb) | 83MB |
+| **Windows (Installer)** | [Download Setup.exe](https://github.com/singaxdev/markdown-editor-pro/releases/v1.0.0/download/Markdown-Editor-Pro-Setup-1.0.0.exe) | 183MB |
+| **macOS (Intel)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/latest/v1.0.0/Markdown-Editor-Pro-1.0.0.dmg) | 114MB |
+| **macOS (Apple Silicon)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/v1.0.0/download/Markdown-Editor-Pro-1.0.0-arm64.dmg) | 110MB |
+| **Linux (AppImage)** | [Download .AppImage](https://github.com/singaxdev/markdown-editor-pro/releases/v1.0.0/download/Markdown-Editor-Pro-1.0.0.AppImage) | 121MB |
+| **Linux (Debian)** | [Download .deb](https://github.com/singaxdev/markdown-editor-pro/releases/latest/v1.0.0/markdown-editor-pro_1.0.0_amd64.deb) | 83MB |
 
-> 📋 **All Downloads**: [View All Release Assets](https://github.com/singaxdev/markdown-editor-pro/releases/latest)
+> 📋 **All Downloads**: [View All Release Assets](https://github.com/singaxdev/markdown-editor-pro/releases/v1.0.0)
 
 ### System Requirements
 
