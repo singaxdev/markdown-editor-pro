@@ -4,13 +4,22 @@ import { Editor as MonacoEditor } from '@monaco-editor/react';
 const Editor = ({
   content,
   onChange,
-  isDarkMode = true,
-  fontSize = 14,
-  fontFamily = 'JetBrains Mono',
-  lineNumbers = true,
-  wordWrap = true,
-  minimap = false
+  settings = {},
+  currentTheme = 'dark',
+  imageManager = null,
+  currentFile = null,
+  onImageInsert = null
 }) => {
+  const isDarkMode = currentTheme !== 'light' && !currentTheme.includes('light');
+  const fontSize = settings.fontSize || 14;
+  const fontFamily = settings.fontFamily || 'JetBrains Mono';
+  const fontWeight = settings.fontWeight || 400;
+  const lineHeight = settings.lineHeight || 1.6;
+  const lineNumbers = settings.lineNumbers !== false;
+  const wordWrap = settings.wordWrap !== false;
+  const minimap = settings.minimap || false;
+  const bracketPairs = settings.bracketPairs !== false;
+  const folding = settings.folding !== false;
   const editorRef = useRef(null);
   const handleEditorChange = (value) => {
     onChange(value || '');
@@ -20,15 +29,22 @@ const Editor = ({
     editorRef.current = editor;
   };
 
-  // Update editor options when fontSize or fontFamily changes
+  // Update editor options when settings change
   useEffect(() => {
     if (editorRef.current) {
       editorRef.current.updateOptions({
         fontSize: fontSize,
-        fontFamily: 'JetBrains Mono, Monaco, Cascadia Code, Consolas, Courier New, monospace',
+        fontFamily: `${fontFamily}, Monaco, Cascadia Code, Consolas, Courier New, monospace`,
+        fontWeight: fontWeight,
+        lineHeight: lineHeight,
+        lineNumbers: lineNumbers ? 'on' : 'off',
+        wordWrap: wordWrap ? 'on' : 'off',
+        minimap: { enabled: minimap },
+        bracketPairColorization: { enabled: bracketPairs },
+        folding: folding,
       });
     }
-  }, [fontSize, fontFamily]);
+  }, [fontSize, fontFamily, fontWeight, lineHeight, lineNumbers, wordWrap, minimap, bracketPairs, folding]);
 
   // Configure Monaco themes
   useEffect(() => {
@@ -120,16 +136,30 @@ const Editor = ({
     });
   }, []);
 
+  // Handle image paste in Monaco editor
+  const handleEditorMount = (editor, monaco) => {
+    editorRef.current = editor;
+    
+    // Add image paste support
+    if (imageManager && onImageInsert) {
+      editor.onDidPaste(async (e) => {
+        // Note: Monaco doesn't provide direct access to clipboard data
+        // This would need to be handled at a higher level
+      });
+    }
+  };
+
   const editorOptions = {
-    minimap: { enabled: false },
-    lineNumbers: 'on',
+    minimap: { enabled: minimap },
+    lineNumbers: lineNumbers ? 'on' : 'off',
     roundedSelection: false,
     scrollBeyondLastLine: false,
     readOnly: false,
     fontSize: fontSize,
     fontFamily: `${fontFamily}, Monaco, Cascadia Code, Roboto Mono, monospace`,
-    lineHeight: 1.6,
-    wordWrap: 'on',
+    fontWeight: fontWeight,
+    lineHeight: lineHeight,
+    wordWrap: wordWrap ? 'on' : 'off',
     wrappingIndent: 'indent',
     padding: { top: 16, bottom: 16 },
     scrollbar: {
@@ -140,10 +170,11 @@ const Editor = ({
     },
     renderLineHighlight: 'line',
     bracketPairColorization: {
-      enabled: true,
+      enabled: bracketPairs,
     },
+    folding: folding,
     guides: {
-      bracketPairs: true,
+      bracketPairs: bracketPairs,
       indentation: true,
     },
     suggest: {
@@ -158,17 +189,43 @@ const Editor = ({
     automaticLayout: true,
   };
 
+  // Apply drag and drop handlers if image manager is available
+  const dragHandlers = imageManager ? imageManager.getDragHandlers(onImageInsert, currentFile) : {};
+
   return (
-    <div className="flex-1 bg-editor-bg">
+    <div 
+      className={`flex-1 bg-editor-bg ${
+        imageManager?.dragOver ? 'image-drop-zone drag-over' : ''
+      }`}
+      {...dragHandlers}
+    >
       <MonacoEditor
         height="100%"
         defaultLanguage="markdown"
         value={content}
         onChange={handleEditorChange}
-        onMount={handleEditorDidMount}
+        onMount={handleEditorMount}
         options={editorOptions}
         theme={isDarkMode ? 'dark-theme' : 'light-theme'}
       />
+      
+      {/* Hidden file input for image selection */}
+      {imageManager && (
+        <input
+          ref={imageManager.fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          style={{ display: 'none' }}
+        />
+      )}
+      
+      {/* Image upload indicator */}
+      {imageManager?.uploading && (
+        <div className="absolute top-4 right-4 bg-editor-accent text-white px-3 py-2 rounded-lg text-sm">
+          Uploading image...
+        </div>
+      )}
     </div>
   );
 };

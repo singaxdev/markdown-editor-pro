@@ -32,6 +32,7 @@ function createWindow() {
     // Open DevTools in development
     // mainWindow.webContents.openDevTools();
   } else {
+    // In production, load the built React app
     mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
   }
 

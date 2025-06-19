@@ -74,6 +74,8 @@ const Toolbar = ({
   onInsertMarkdown,
   onOpenSettings,
   onAIGenerate,
+  onInsertImage,
+  onInsertTable,
   isPreviewMode,
   isSidebarOpen,
   isSplitView,
@@ -255,8 +257,8 @@ const Toolbar = ({
         />
         <ToolbarButton
           icon={Table}
-          onClick={() => insertMarkdown('\n| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n')}
-          title="Table"
+          onClick={onInsertTable || (() => insertMarkdown('\n| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |\n'))}
+          title="Insert Table (Visual Editor)"
         />
         <ToolbarButton
           icon={Link}
@@ -265,8 +267,8 @@ const Toolbar = ({
         />
         <ToolbarButton
           icon={Image}
-          onClick={() => insertMarkdown('![alt text](image-url)')}
-          title="Image"
+          onClick={onInsertImage || (() => insertMarkdown('![alt text](image-url)'))}
+          title="Insert Image (Drag & Drop or Paste supported)"
         />
         <ToolbarButton
           icon={Quote}

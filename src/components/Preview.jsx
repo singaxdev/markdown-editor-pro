@@ -1,9 +1,51 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import MermaidDiagram, { useMermaidDetection, replaceMermaidInHTML } from './MermaidDiagram';
 
-const Preview = ({ htmlContent }) => {
+const Preview = ({ htmlContent, markdownContent = '' }) => {
+  const previewRef = useRef(null);
+  const diagrams = useMermaidDetection(markdownContent);
+
+  // Process HTML to replace Mermaid code blocks with placeholders
+  const processedHtml = diagrams.length > 0 ? replaceMermaidInHTML(htmlContent, diagrams) : htmlContent;
+
+  useEffect(() => {
+    if (previewRef.current && diagrams.length > 0) {
+      // Find all Mermaid placeholders and replace them with actual diagram components
+      const placeholders = previewRef.current.querySelectorAll('.mermaid-placeholder');
+      
+      placeholders.forEach((placeholder, index) => {
+        const diagramIndex = parseInt(placeholder.dataset.index);
+        const diagram = diagrams[diagramIndex];
+        
+        if (diagram) {
+          // Create a container for the React component
+          const container = document.createElement('div');
+          container.className = 'mermaid-diagram-container my-4';
+          
+          placeholder.parentNode.replaceChild(container, placeholder);
+          
+          // Render the Mermaid diagram
+          import('react-dom/client').then(({ createRoot }) => {
+            const root = createRoot(container);
+            root.render(
+              <MermaidDiagram 
+                chart={diagram.code} 
+                className="w-full"
+                onError={(error) => {
+                  console.error('Mermaid diagram error:', error);
+                }}
+              />
+            );
+          });
+        }
+      });
+    }
+  }, [processedHtml, diagrams]);
+
   return (
     <div className="flex-1 bg-gray-900 overflow-y-auto">
       <div
+        ref={previewRef}
         id="preview-content"
         className="max-w-4xl mx-auto p-8 min-h-full"
         style={{
@@ -11,7 +53,7 @@ const Preview = ({ htmlContent }) => {
           lineHeight: '1.6',
           color: '#e2e8f0',
         }}
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
+        dangerouslySetInnerHTML={{ __html: processedHtml }}
       />
 
       <style dangerouslySetInnerHTML={{
@@ -196,6 +238,54 @@ const Preview = ({ htmlContent }) => {
           border: 0;
           height: 1px;
           margin: 24px 0;
+        }
+
+        /* Mermaid diagram styles */
+        .mermaid-diagram-container {
+          margin: 24px 0;
+          padding: 16px;
+          background-color: #1f2937;
+          border: 1px solid #374151;
+          border-radius: 8px;
+          text-align: center;
+          overflow-x: auto;
+        }
+
+        .mermaid-diagram-container svg {
+          max-width: 100%;
+          height: auto;
+        }
+
+        /* Mermaid theme customization */
+        .mermaid-container .node rect,
+        .mermaid-container .node circle,
+        .mermaid-container .node ellipse,
+        .mermaid-container .node polygon {
+          fill: #374151 !important;
+          stroke: #60a5fa !important;
+          stroke-width: 2px !important;
+        }
+
+        .mermaid-container .node .label,
+        .mermaid-container .nodeLabel {
+          color: #e2e8f0 !important;
+          fill: #e2e8f0 !important;
+        }
+
+        .mermaid-container .edgePath .path {
+          stroke: #60a5fa !important;
+          stroke-width: 2px !important;
+        }
+
+        .mermaid-container .arrowheadPath {
+          fill: #60a5fa !important;
+          stroke: #60a5fa !important;
+        }
+
+        .mermaid-container .edgeLabel {
+          background-color: #1f2937 !important;
+          color: #e2e8f0 !important;
+          fill: #e2e8f0 !important;
         }
 
         #preview-content strong {

@@ -1,12 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Preview from './Preview';
 
-const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
-  const [splitRatio, setSplitRatio] = useState(50);
+const SplitView = ({ 
+  content, 
+  onChange, 
+  htmlContent, 
+  markdownContent = '',
+  isSplitView, 
+  settings = {},
+  imageManager = null,
+  currentFile = null,
+  onImageInsert = null,
+  scrollSync = null 
+}) => {
+  const [splitRatio, setSplitRatio] = useState(settings.splitRatio || 50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef(null);
-  const editorRef = useRef(null);
-  const previewRef = useRef(null);
+  
+  // Use scroll sync refs if provided, otherwise create local ones
+  const editorRef = scrollSync?.editorRef || useRef(null);
+  const previewRef = scrollSync?.previewRef || useRef(null);
   const isScrollSyncEnabled = useRef(true);
 
   useEffect(() => {
@@ -39,8 +52,8 @@ const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
     };
   }, [isDragging]);
 
-  // Synchronized scrolling
-  const handleEditorScroll = () => {
+  // Synchronized scrolling - use provided scroll sync or fallback to local implementation
+  const handleEditorScroll = scrollSync?.handleEditorScroll || (() => {
     if (!isScrollSyncEnabled.current || !editorRef.current || !previewRef.current) return;
 
     const editor = editorRef.current;
@@ -57,9 +70,9 @@ const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
     setTimeout(() => {
       isScrollSyncEnabled.current = true;
     }, 100);
-  };
+  });
 
-  const handlePreviewScroll = () => {
+  const handlePreviewScroll = scrollSync?.handlePreviewScroll || (() => {
     if (!isScrollSyncEnabled.current || !editorRef.current || !previewRef.current) return;
 
     const editor = editorRef.current;
@@ -76,7 +89,7 @@ const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
     setTimeout(() => {
       isScrollSyncEnabled.current = true;
     }, 100);
-  };
+  });
 
   const handleKeyDown = (e) => {
     // Handle Tab key for indentation
@@ -94,16 +107,32 @@ const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
     }
   };
 
+  // Handle image paste
+  const handlePaste = async (e) => {
+    if (imageManager && onImageInsert) {
+      const handled = await imageManager.handlePaste(e, onImageInsert, currentFile);
+      if (handled) {
+        return; // Image was pasted, don't process as text
+      }
+    }
+  };
+
   // Calculate line number width to prevent overlap
   const lineCount = content.split('\n').length;
   const lineNumberWidth = Math.max(lineCount.toString().length * 8 + 16, 40);
+
+  // Apply drag and drop handlers if image manager is available
+  const dragHandlers = imageManager ? imageManager.getDragHandlers(onImageInsert, currentFile) : {};
 
   return (
     <div ref={containerRef} className="flex-1 flex h-full">
       {/* Editor Panel */}
       <div
-        className="relative overflow-hidden bg-editor-bg flex flex-col"
+        className={`relative overflow-hidden bg-editor-bg flex flex-col ${
+          imageManager?.dragOver ? 'image-drop-zone drag-over' : ''
+        }`}
         style={{ width: `${splitRatio}%` }}
+        {...dragHandlers}
       >
         <div className="flex-1 relative">
           <textarea
@@ -112,11 +141,13 @@ const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onScroll={handleEditorScroll}
+            onPaste={handlePaste}
             className="w-full h-full bg-editor-bg text-editor-text border-0 outline-none resize-none font-mono text-sm leading-relaxed"
             style={{
-              fontFamily: 'JetBrains Mono, Monaco, Cascadia Code, Roboto Mono, monospace',
-              fontSize: '14px',
-              lineHeight: '1.6',
+              fontFamily: `${settings.fontFamily || 'JetBrains Mono'}, Monaco, Cascadia Code, Roboto Mono, monospace`,
+              fontSize: `${settings.fontSize || 14}px`,
+              fontWeight: settings.fontWeight || 400,
+              lineHeight: settings.lineHeight || 1.6,
               tabSize: 2,
               minHeight: '100%',
               paddingLeft: `${lineNumberWidth}px`,
@@ -124,7 +155,7 @@ const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
               paddingRight: '16px',
               paddingBottom: '16px'
             }}
-            placeholder="Start typing your markdown here..."
+            placeholder="Start typing your markdown here... (You can paste images directly!)"
             spellCheck={false}
           />
 
@@ -171,226 +202,10 @@ const SplitView = ({ content, onChange, htmlContent, isSplitView }) => {
           className="flex-1 bg-gray-900 overflow-y-auto"
           onScroll={handlePreviewScroll}
         >
-          <div
-            className="split-preview-content max-w-4xl mx-auto p-8 min-h-full"
-            style={{
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-              lineHeight: '1.6',
-              color: '#e2e8f0',
-            }}
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
+          <Preview 
+            htmlContent={htmlContent} 
+            markdownContent={markdownContent}
           />
-
-          {/* Include the same styles as the Preview component */}
-          <style dangerouslySetInnerHTML={{
-            __html: `
-            .split-preview-content h1,
-            .split-preview-content h2,
-            .split-preview-content h3,
-            .split-preview-content h4,
-            .split-preview-content h5,
-            .split-preview-content h6 {
-              margin-top: 24px;
-              margin-bottom: 16px;
-              font-weight: 600;
-              line-height: 1.25;
-              color: #f1f5f9;
-            }
-
-            .split-preview-content h1 {
-              font-size: 2em;
-              border-bottom: 1px solid #475569;
-              padding-bottom: 10px;
-            }
-
-            .split-preview-content h2 {
-              font-size: 1.5em;
-              border-bottom: 1px solid #475569;
-              padding-bottom: 8px;
-            }
-
-            .split-preview-content h3 {
-              font-size: 1.25em;
-            }
-
-            .split-preview-content p {
-              margin-bottom: 16px;
-              color: #e2e8f0;
-            }
-
-            .split-preview-content ul,
-            .split-preview-content ol {
-              margin-bottom: 16px;
-              padding-left: 30px;
-              color: #e2e8f0;
-            }
-
-            .split-preview-content li {
-              margin-bottom: 4px;
-            }
-
-            .split-preview-content code {
-              background-color: #374151;
-              color: #fbbf24;
-              border-radius: 3px;
-              font-size: 85%;
-              margin: 0;
-              padding: 0.2em 0.4em;
-              font-family: 'JetBrains Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
-            }
-
-            .split-preview-content pre {
-              background-color: #1f2937 !important;
-              border: 1px solid #374151;
-              border-radius: 6px;
-              font-size: 85%;
-              line-height: 1.45;
-              overflow: auto;
-              padding: 16px;
-              margin-bottom: 16px;
-            }
-
-            .split-preview-content pre code {
-              background-color: transparent !important;
-              color: #e5e7eb !important;
-              border: 0;
-              display: block;
-              font-size: 100%;
-              margin: 0;
-              padding: 0;
-              font-family: 'JetBrains Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
-            }
-
-            .split-preview-content .hljs-keyword {
-              color: #bb86fc !important;
-              font-weight: bold;
-            }
-
-            .split-preview-content .hljs-string {
-              color: #a5d6a7 !important;
-            }
-
-            .split-preview-content .hljs-number {
-              color: #ffab40 !important;
-            }
-
-            .split-preview-content .hljs-comment {
-              color: #75715e !important;
-              font-style: italic;
-            }
-
-            .split-preview-content .hljs-function {
-              color: #64b5f6 !important;
-            }
-
-            .split-preview-content .hljs-title {
-              color: #64b5f6 !important;
-              font-weight: bold;
-            }
-
-            .split-preview-content .hljs-variable {
-              color: #e1f5fe !important;
-            }
-
-            .split-preview-content .hljs-built_in {
-              color: #ffcc02 !important;
-            }
-
-            .split-preview-content .hljs-literal {
-              color: #ff7043 !important;
-            }
-
-            .split-preview-content .hljs-operator {
-              color: #4fc3f7 !important;
-            }
-
-            .split-preview-content .hljs-tag {
-              color: #f48fb1 !important;
-            }
-
-            .split-preview-content .hljs-attr {
-              color: #ce93d8 !important;
-            }
-
-            .split-preview-content blockquote {
-              border-left: 4px solid #6b7280;
-              color: #9ca3af;
-              margin: 0 0 16px 0;
-              padding: 0 16px;
-              font-style: italic;
-            }
-
-            .split-preview-content table {
-              border-collapse: collapse;
-              margin-bottom: 16px;
-              width: 100%;
-              background-color: #1f2937;
-              border: 1px solid #374151;
-            }
-
-            .split-preview-content table th,
-            .split-preview-content table td {
-              border: 1px solid #374151;
-              padding: 6px 13px;
-              color: #e2e8f0;
-            }
-
-            .split-preview-content table th {
-              background-color: #374151;
-              font-weight: 600;
-              color: #f9fafb;
-            }
-
-            .split-preview-content img {
-              max-width: 100%;
-              height: auto;
-              margin: 16px 0;
-              border-radius: 4px;
-            }
-
-            .split-preview-content a {
-              color: #60a5fa;
-              text-decoration: none;
-            }
-
-            .split-preview-content a:hover {
-              text-decoration: underline;
-              color: #93c5fd;
-            }
-
-            .split-preview-content hr {
-              background-color: #4b5563;
-              border: 0;
-              height: 1px;
-              margin: 24px 0;
-            }
-
-            .split-preview-content strong {
-              color: #f1f5f9;
-              font-weight: 600;
-            }
-
-            .split-preview-content em {
-              color: #cbd5e1;
-              font-style: italic;
-            }
-
-            .split-preview-content input[type="checkbox"] {
-              margin-right: 8px;
-              transform: scale(1.2);
-            }
-
-            .split-preview-content li.task-list-item {
-              list-style: none;
-              margin-left: -20px;
-            }
-
-            .split-preview-content del {
-              color: #9ca3af;
-              text-decoration: line-through;
-            }
-            `
-          }} />
         </div>
 
         {/* Preview label */}

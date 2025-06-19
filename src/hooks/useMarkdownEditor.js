@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { marked } from 'marked';
+import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import DOMPurify from 'dompurify';
 
@@ -26,9 +27,29 @@ Start typing your markdown here...
 
 ### Code Blocks
 \`\`\`javascript
-function hello() {
-    console.log("Hello, World!");
+// JavaScript with syntax highlighting
+function fibonacci(n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
 }
+
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(x => x * 2);
+console.log("Doubled:", doubled);
+\`\`\`
+
+\`\`\`python
+# Python example
+def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quicksort(left) + middle + quicksort(right)
+
+print(quicksort([3, 6, 8, 10, 1, 2, 1]))
 \`\`\`
 
 ### Tables
@@ -53,8 +74,9 @@ function hello() {
 
   // Configure marked with highlight.js
   useEffect(() => {
-    marked.setOptions({
-      highlight: function(code, lang) {
+    // Configure marked with extensions
+    marked.use(markedHighlight({
+      highlight(code, lang) {
         if (lang && hljs.getLanguage(lang)) {
           try {
             return hljs.highlight(code, { language: lang }).value;
@@ -63,7 +85,11 @@ function hello() {
           }
         }
         return hljs.highlightAuto(code).value;
-      },
+      }
+    }));
+
+    // Set other marked options
+    marked.setOptions({
       gfm: true,
       breaks: true,
       pedantic: false,
@@ -79,7 +105,10 @@ function hello() {
   // Parse markdown to HTML
   const htmlContent = DOMPurify.sanitize(marked.parse(content), {
     ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'del', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'span', 'a', 'img', 'hr', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'input'],
-    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'type', 'checked', 'disabled']
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'type', 'checked', 'disabled'],
+    // Allow highlight.js classes
+    ALLOW_UNKNOWN_PROTOCOLS: false,
+    ADD_ATTR: ['target']
   });
 
   const handleContentChange = useCallback((newContent) => {
