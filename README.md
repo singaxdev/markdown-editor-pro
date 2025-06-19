@@ -134,16 +134,6 @@ Markdown Editor Pro is built with love and powered by these amazing open-source 
 - **Electron** - Cross-platform desktop application framework
 - **React** - User interface library
 
-## 🗺️ Roadmap
-
-We're constantly working to make Markdown Editor Pro even better. Here's what's coming:
-
-- 🔌 **Plugin System** - Extend functionality with custom plugins
-- 👥 **Collaboration** - Real-time collaborative editing
-- ☁️ **Cloud Sync** - Synchronize your documents across devices
-- 📱 **Mobile App** - Edit on the go with mobile companion app
-- 🎨 **More Themes** - Additional color themes and customization options
-
 ---
 
 <div align="center">
