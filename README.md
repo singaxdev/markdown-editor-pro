@@ -61,7 +61,6 @@
 | Platform | Download | Size |
 |----------|----------|------|
 | **Windows (Installer)** | [Download Setup.exe](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-Setup-1.0.0.exe) | 183MB |
-| **Windows (Portable)** | [Download Portable.exe](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.exe) | 182MB |
 | **macOS (Intel)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.dmg) | 114MB |
 | **macOS (Apple Silicon)** | [Download .dmg](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0-arm64.dmg) | 110MB |
 | **Linux (AppImage)** | [Download .AppImage](https://github.com/singaxdev/markdown-editor-pro/releases/latest/download/Markdown-Editor-Pro-1.0.0.AppImage) | 121MB |
